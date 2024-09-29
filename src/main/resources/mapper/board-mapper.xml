@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Board">
+
+<!--게시글 등록-->
+    <insert id="save" parameterType="board"><!--mybatis-config.xml BoardDTO alias를 board로 지정했음-->
+        INSERT INTO board_table
+         ( boardTitle
+         , boardWriter
+         , boardPass
+         , boardContents
+         )
+        VALUES
+         ( #{boardTitle}
+         , #{boardWriter}
+         , #{boardPass}
+         , #{boardContents}
+        )
+    </insert>
+
+<!--게시판 목록-->
+    <select id="findAll" resultType="board">
+        SELECT id
+             , boardTitle
+             , boardWriter
+             , boardHits
+             , date_format(createdAt, "%Y-%m-%d") as createdAt
+        FROM board_table
+        ORDER BY id DESC
+    </select>
+
+<!--게시글 단건조회-->
+    <select id="findById" resultType="board" parameterType="Long">
+        SELECT id
+             , boardPass
+             , boardTitle
+             , boardWriter
+             , boardContents
+             , boardHits
+             , date_format(createdAt, "%Y-%m-%d %H:%i:%s") as createdAt
+        FROM board_table
+        WHERE id = #{id};
+    </select>
+    <!--조회수 증가-->
+    <update id="updateHits" parameterType="Long">
+        UPDATE board_table
+        SET boardHits = boardHits + 1
+        WHERE id = #{id}
+    </update>
+
+<!--게시글 수정-->
+    <update id="update" parameterType="board">
+        UPDATE board_table
+        SET boardTitle = #{boardTitle}
+          , boardContents = #{boardContents}
+        WHERE id = #{id}
+    </update>
+
+<!--게시글 삭제-->
+    <delete id="delete" parameterType="Long">
+        DELETE FROM board_table
+        WHERE id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>board</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <style>
+        table, tr, td, th {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>id</th>
+            <td th:text="${board.id}"></td>
+        </tr>
+        <tr>
+            <th>title</th>
+            <td th:text="${board.boardTitle}"></td>
+        </tr>
+        <tr>
+            <th>writer</th>
+            <td th:text="${board.boardWriter}"></td>
+        </tr>
+        <tr>
+            <th>date</th>
+            <td th:text="${board.createdAt}"></td>
+        </tr>
+        <tr>
+            <th>hits</th>
+            <td th:text="${board.boardHits}"></td>
+        </tr>
+        <tr>
+            <th>contents</th>
+            <td th:text="${board.boardContents}"></td>
+        </tr>
+    </table>
+    <br>
+<!--    <button onclick="listReq()">목록</button>-->
+    <a th:href="@{/list}" class="btn btn-secondary btn-sm">목록</a>
+    <a th:href="@{/update/{id}(id=${board.id})}" class="btn btn-primary btn-sm">수정</a>
+    <a th:href="@{/delete/{id}(id=${board.id})}" class="btn btn-danger btn-sm">삭제</a>
+</body>
+<!--<script>
+    const listReq = () => {
+        location.href = "/list";
+    }
+</script>-->
+</html>
