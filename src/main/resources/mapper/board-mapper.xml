@@ -4,20 +4,23 @@
 <mapper namespace="Board">
 
 <!--게시글 등록-->
-    <insert id="save" parameterType="board"><!--mybatis-config.xml BoardDTO alias를 board로 지정했음-->
+    <insert id="save" parameterType="board" useGeneratedKeys="true" keyProperty="id"><!--mybatis-config.xml BoardDTO alias를 board로 지정했음-->
         INSERT INTO board_table
          ( boardTitle
          , boardWriter
          , boardPass
          , boardContents
+         , fileAttached
          )
         VALUES
          ( #{boardTitle}
          , #{boardWriter}
          , #{boardPass}
          , #{boardContents}
+         , #{fileAttached}
         )
     </insert>
+
 
 <!--게시판 목록-->
     <select id="findAll" resultType="board">
@@ -39,6 +42,7 @@
              , boardContents
              , boardHits
              , date_format(createdAt, "%Y-%m-%d %H:%i:%s") as createdAt
+             , fileAttached
         FROM board_table
         WHERE id = #{id};
     </select>
@@ -62,5 +66,28 @@
         DELETE FROM board_table
         WHERE id = #{id}
     </delete>
+
+
+<!--== 파일 첨부 관련 ========== -->
+    <!--파일 첨부-->
+    <insert id="saveFile" parameterType="boardFile"><!--mybatis-config.xml에서 BoardFileDTO alias를 boardFile로 지정-->
+        INSERT INTO board_file_table
+        ( originalFileName
+        , storedFileName
+        , boardId
+        )
+        VALUES
+        ( #{originalFileName}
+        , #{storedFileName}
+        , #{boardId}
+        )
+    </insert>
+
+    <!--파일 조회-->
+    <select id="findFile" parameterType="Long" resultType="boardFile">
+        SELECT *
+        FROM board_file_table
+        WHERE boardId = #{id}
+    </select>
 
 </mapper>

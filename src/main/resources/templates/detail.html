@@ -40,6 +40,17 @@
             <th>contents</th>
             <td th:text="${board.boardContents}"></td>
         </tr>
+        <tr th:if="${board.fileAttached == 1}">
+            <th>image</th>
+    <!--1) 파일 첨부-->
+            <!--<td>
+                <img th:src="@{|/upload/${boardFile.storedFileName}|}" alt="" width="200" height="200">
+            </td>-->
+    <!--2) 다중파일 첨부-->
+            <td th:each="boardFile: ${boardFileList}">
+                <img th:src="@{|/upload/${boardFile.storedFileName}|}" alt="" width="100" height="100">
+            </td>
+        </tr>
     </table>
     <br>
 <!--    <button onclick="listReq()">목록</button>-->

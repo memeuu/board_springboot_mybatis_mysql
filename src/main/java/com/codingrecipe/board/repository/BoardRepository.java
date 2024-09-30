@@ -1,6 +1,7 @@
 package com.codingrecipe.board.repository;
 
 import com.codingrecipe.board.dto.BoardDTO;
+import com.codingrecipe.board.dto.BoardFileDTO;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,10 +21,16 @@ public class BoardRepository {
 /*
     게시글 등록
 */
-    public void save(BoardDTO boardDTO) {
+    public BoardDTO save(BoardDTO boardDTO) {
         //insert(statement, parameter) - 파라미터 한 개만 넘길 수 있음
         // => 여러 개 넘기려면 HashMap 타입으로 넘길 수 있음 (mapper.xml에 parameterType="map")
         sql.insert("Board.save", boardDTO); //Board = mapper의 namespace 속성
+        return boardDTO; //파일첨부 기능 만들면서 반환타입 void에서 변경
+    }
+
+    /* < 파일 첨부 > */
+    public void saveFile(BoardFileDTO boardFileDTO) {
+        sql.insert("Board.saveFile", boardFileDTO);
     }
 
 
@@ -42,6 +49,17 @@ public class BoardRepository {
         return Optional.ofNullable(board); //null이면 Optional.empty()반환
     }
 
+//  1) 파일 조회
+//    public BoardFileDTO findFile(Long id) {
+//        return sql.selectOne("Board.findFile", id);
+//    }
+
+//  2) 다중 파일 조회
+    public List<BoardFileDTO> findFile(Long id) {
+        return sql.selectList("Board.findFile", id);
+    }
+
+
     public void updateHits(Long id) {
         sql.update("Board.updateHits", id);
     }
@@ -56,4 +74,5 @@ public class BoardRepository {
     public void delete(Long id) {
         sql.delete("Board.delete", id);
     }
+
 }

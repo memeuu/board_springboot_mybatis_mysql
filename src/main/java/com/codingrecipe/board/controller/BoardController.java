@@ -1,6 +1,7 @@
 package com.codingrecipe.board.controller;
 
 import com.codingrecipe.board.dto.BoardDTO;
+import com.codingrecipe.board.dto.BoardFileDTO;
 import com.codingrecipe.board.exception.BoardNotFoundException;
 import com.codingrecipe.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -33,7 +35,7 @@ public class BoardController {
     }
     
     @PostMapping("/save")
-    public String save(@ModelAttribute BoardDTO boardDTO) {
+    public String save(@ModelAttribute BoardDTO boardDTO) throws IOException {
         //log.info("boardDTO= {}", boardDTO);
         boardService.save(boardDTO);
         //return "redirect:/index.html"; //static 폴더에 있는 HTML 파일 직접 접근 (확장자 빼고 index 해도 됨)
@@ -60,6 +62,21 @@ public class BoardController {
         BoardDTO board = boardService.findById(id);
         //log.info("board= {}", board);
         model.addAttribute("board", board);
+
+//     1) 파일 조회
+/*        if (board.getFileAttached() == 1) { //첨부파일이 있으면
+            BoardFileDTO boardFileDTO = boardService.findFile(id);
+            model.addAttribute("boardFile", boardFileDTO);
+            log.info("boardFile={}", boardFileDTO);
+        }*/
+
+//     2) 다중 파일 조회
+        if (board.getFileAttached() == 1) { //첨부파일이 있으면
+            List<BoardFileDTO> boardFileDTOList = boardService.findFile(id);
+            model.addAttribute("boardFileList", boardFileDTOList);
+            log.info("boardFileList= {}", boardFileDTOList);
+        }
+
         return "detail";
     }
 
